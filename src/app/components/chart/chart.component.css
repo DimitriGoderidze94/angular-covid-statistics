@@ -1,0 +1,14 @@
+.container {
+  display: inline-flex;
+  font-size: 13px;
+}
+.chartContainer {
+  text-align: center;
+}
+
+app-info-boxes {
+  width: 30vw;
+  margin: 1%;
+
+  text-align: center;
+}

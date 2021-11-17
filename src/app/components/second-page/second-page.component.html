@@ -1,0 +1,76 @@
+<div class="wrapper">
+  <div style="text-align: center">
+    <select id="chooseCountry" (change)="onChange()"></select>
+  </div>
+  <div class="chartContainer">
+    <div class="container">
+      <app-info-boxes
+        text="{{ this.population }}"
+        label="მოსახლეობა"
+      ></app-info-boxes>
+      <app-info-boxes
+        text="{{ this.lastUpdate }}"
+        label="მონაცემების განახლების ბოლო თარიღი"
+      ></app-info-boxes>
+      <app-info-boxes
+        text="{{ this.deathPercent }}"
+        label="სიკვდილიანობის პროცენტი"
+      ></app-info-boxes>
+    </div>
+    <div class="container">
+      <app-info-boxes
+        text="{{ this.recoverPercent }}"
+        label="გამოჯანმრთელების პროცენტი"
+      ></app-info-boxes>
+
+      <app-info-boxes
+        text="{{ this.casesPerMilion }}"
+        label="შემთხვევების პროცენტული მაჩვენებელი მილიონ მოსახლეზე"
+      ></app-info-boxes>
+      <app-info-boxes
+        text="{{ this.totalConfirmed1 }}"
+        label="ჯამური შემთხვევების რაოდენობა"
+      ></app-info-boxes>
+    </div>
+    <div class="container">
+      <app-info-boxes
+        text="{{ this.confirmedForDate }}"
+        label="მიმდინარე თარიღის შემთხვევების რაოდენობა"
+      ></app-info-boxes>
+      <app-info-boxes
+        text="{{ this.totalDeath1 }}"
+        label="ჯამური გარდაცვალებების რაოდენობა"
+      ></app-info-boxes>
+
+      <app-info-boxes
+        text="{{ this.newDeath }}"
+        label="მიმდინარე თარიღის გარდაცვალებების რაოდენობა"
+      ></app-info-boxes>
+    </div>
+    <div class="container">
+      <app-info-boxes
+        text="{{ this.totalRecovered0 }}"
+        label="ჯამური გამოჯანმრთელების რაოდენობა"
+      ></app-info-boxes>
+      <app-info-boxes
+        text="{{ this.recoveredForDate }}"
+        label="მიმდინარე თარიღის გამოჯანმრთელების რაოდენობა"
+      ></app-info-boxes>
+    </div>
+  </div>
+  <div style="text-align: center">
+    <app-time (dateChange)="changeDate()"></app-time>
+    <app-button
+      (btnClick)="toggleThreeMonth()"
+      text="{{ this.show }}"
+    ></app-button>
+  </div>
+  <div class="chartContainer">
+    <h2>{{ this.lineChartTitle }}</h2>
+    <div echarts [options]="chartOption" class="demo-chart"></div>
+  </div>
+  <div class="chartContainer">
+    <h2>მოცემული თარიღის მონაცემები</h2>
+    <div echarts [options]="chartOption1" class="demo-chart"></div>
+  </div>
+</div>

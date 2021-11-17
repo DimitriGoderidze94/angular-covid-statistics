@@ -1,0 +1,8 @@
+div {
+  border: 1px solid black;
+  height: 16px;
+}
+label {
+  font-size: 11px;
+  width: 30vw;
+}

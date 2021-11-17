@@ -1,0 +1,38 @@
+<div style="text-align: center">
+  <app-time (dateChange)="changeDate()"></app-time>
+</div>
+<div class="container">
+  <app-info-boxes
+    text="{{ this.totalConfirmed }}"
+    label="ჯამური შემთხვევების რაოდენობა"
+  ></app-info-boxes>
+  <app-info-boxes
+    text="{{ this.todayConfirmed }}"
+    label="მიმდინარე თარიღის შემთხვევების რაოდენობა"
+  ></app-info-boxes>
+  <app-info-boxes
+    text="{{ this.totalDeaths }}"
+    label="ჯამური გარდაცვალებების რაოდენობა"
+  ></app-info-boxes>
+</div>
+<div class="container">
+  <app-info-boxes
+    text="{{ this.todayDeaths }}"
+    label="მიმდინარე თარიღის გარდაცვალებების რაოდენობა"
+  ></app-info-boxes>
+  <app-info-boxes
+    text="{{ this.totalRecovered }}"
+    label="ჯამური გამოჯანმრთელების რაოდენობა"
+  ></app-info-boxes>
+  <app-info-boxes
+    text="{{ this.todayRecovered }}"
+    label="მიმდინარე თარიღის გამოჯანმრთელების რაოდენობა"
+  ></app-info-boxes>
+</div>
+<div class="chartContainer">
+  <h2>
+    მსოფლიო ჯამური ინფორმაცია შემთხვევების, გარდაცვალებების და
+    გამოჯანმრთელებების შესახებ
+  </h2>
+  <div echarts [options]="chartOption" class="demo-chart"></div>
+</div>
