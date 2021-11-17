@@ -2,7 +2,7 @@
   <div style="text-align: center">
     <select id="chooseCountry" (change)="onChange()"></select>
   </div>
-  <div class="chartContainer">
+  <div style="text-align: center">
     <div class="container">
       <app-info-boxes
         text="{{ this.population }}"
@@ -35,7 +35,7 @@
     <div class="container">
       <app-info-boxes
         text="{{ this.confirmedForDate }}"
-        label="მიმდინარე თარიღის შემთხვევების რაოდენობა"
+        label="არჩეული თარიღის შემთხვევების რაოდენობა"
       ></app-info-boxes>
       <app-info-boxes
         text="{{ this.totalDeath1 }}"
@@ -44,7 +44,7 @@
 
       <app-info-boxes
         text="{{ this.newDeath }}"
-        label="მიმდინარე თარიღის გარდაცვალებების რაოდენობა"
+        label="არჩეული თარიღის გარდაცვალებების რაოდენობა"
       ></app-info-boxes>
     </div>
     <div class="container">
@@ -54,7 +54,7 @@
       ></app-info-boxes>
       <app-info-boxes
         text="{{ this.recoveredForDate }}"
-        label="მიმდინარე თარიღის გამოჯანმრთელების რაოდენობა"
+        label="არჩეული თარიღის გამოჯანმრთელების რაოდენობა"
       ></app-info-boxes>
     </div>
   </div>
@@ -63,6 +63,7 @@
     <app-button
       (btnClick)="toggleThreeMonth()"
       text="{{ this.show }}"
+      backgroundColor="#EE82EE"
     ></app-button>
   </div>
   <div class="chartContainer">

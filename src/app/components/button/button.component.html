@@ -1,2 +1,4 @@
-<button (click)="onClick()">{{ text }}</button>
+<button [ngStyle]="{ 'background-color': backgroundColor }" (click)="onClick()">
+  {{ text }}
+</button>
 <label>{{ label }}</label>
