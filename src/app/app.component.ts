@@ -10,11 +10,11 @@ export class AppComponent {
   displayElement1 = true;
   displayElement2 = false;
   firsPage() {
-    this.displayElement1 = true;
     this.displayElement2 = false;
+    this.displayElement1 = true;
   }
   secondPage() {
-    this.displayElement2 = true;
     this.displayElement1 = false;
+    this.displayElement2 = true;
   }
 }
