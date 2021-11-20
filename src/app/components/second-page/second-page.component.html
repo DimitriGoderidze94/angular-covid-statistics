@@ -59,7 +59,6 @@
     </div>
   </div>
   <div style="text-align: center">
-    <app-time (dateChange)="changeDate()"></app-time>
     <app-button
       (btnClick)="toggleThreeMonth()"
       text="{{ this.show }}"
@@ -71,7 +70,7 @@
     <div echarts [options]="chartOption" class="demo-chart"></div>
   </div>
   <div class="chartContainer">
-    <h2>მოცემული თარიღის მონაცემები</h2>
+    <h2>{{ this.lineChartTitle2 }}</h2>
     <div echarts [options]="chartOption1" class="demo-chart"></div>
   </div>
 </div>

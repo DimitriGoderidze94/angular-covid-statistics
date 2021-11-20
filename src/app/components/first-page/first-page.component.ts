@@ -16,34 +16,20 @@ export class FirstPageComponent implements OnInit {
   totalRecovered = 0;
   todayRecovered = 0;
 
+  totalConfirmedArray: any = [];
+  dateArray: any = [];
+  totalDeathsArray: any = [];
+  totalRecoveredArray: any = [];
+
   constructor(private api: HttpService) {}
   chosenDate = new Date().toISOString().slice(0, 10);
 
-  chartOption: EChartsOption = {
-    xAxis: {
-      type: 'category',
-      data: [
-        'შემთხვევები \r\n \r\n' + this.totalConfirmed,
-        'გარდაცვალებები \r\n \r\n' + this.totalDeaths,
-        'გამოჯანმრთელებები \r\n \r\n' + this.totalRecovered,
-      ],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        data: [this.totalConfirmed, this.totalDeaths, this.totalRecovered],
-        type: 'line',
-      },
-    ],
-  };
+  chartOption: EChartsOption = {};
 
   ngOnInit() {
     (<HTMLInputElement>document.getElementsByClassName('datePicker')[0]).max =
       new Date().toISOString().split('T')[0];
-
-    this.api.getTotalData().subscribe((data) => {
+    this.api.getTotalData().subscribe(() => {
       this.changeDate();
     });
   }
@@ -56,6 +42,11 @@ export class FirstPageComponent implements OnInit {
     this.api.getTotalData().subscribe((data) => {
       var myData = JSON.parse(JSON.stringify(data));
       for (var i = 0; i < myData.data.length; i++) {
+        this.totalConfirmedArray.unshift(myData.data[i].confirmed);
+        this.dateArray.unshift(myData.data[i].date);
+        this.totalRecoveredArray.unshift(myData.data[i].recovered);
+        this.totalDeathsArray.unshift(myData.data[i].deaths);
+
         if (myData.data[i].date == this.chosenDate) {
           this.totalConfirmed = myData.data[i].confirmed;
           this.todayConfirmed = myData.data[i].new_confirmed;
@@ -67,24 +58,85 @@ export class FirstPageComponent implements OnInit {
       }
 
       this.chartOption = {
+        title: {
+          text: 'მსოფლიო',
+          textStyle: {
+            color: 'darkBlue',
+            textBorderType: 'solid',
+            textBorderColor: 'indigo',
+            textBorderWidth: 2,
+          },
+        },
+        tooltip: {
+          trigger: 'axis',
+        },
+        legend: {
+          data: [
+            'ჯამური შემთხვევები',
+            'ჯამური გარდაცვალებები',
+            'ჯამური გამოჯანმრთელებები',
+          ],
+        },
+
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        toolbox: {
+          feature: {
+            dataView: {
+              show: true,
+              readOnly: true,
+              title: 'მონაცემების ნახვა',
+              lang: [
+                'ჯამური ინფორმაცია შემთხვევების, გარდაცვალებების და გამოჯანმრთელებების შესახებ',
+                'გამორთვა',
+              ],
+            },
+            saveAsImage: { title: 'სურათის გადმოწერა' },
+          },
+        },
         xAxis: {
           type: 'category',
-          data: [
-            'შემთხვევები \r\n \r\n' + this.totalConfirmed,
-            'გარდაცვალებები \r\n \r\n' + this.totalDeaths,
-            'გამოჯანმრთელებები \r\n \r\n' + this.totalRecovered,
-          ],
+          boundaryGap: false,
+          data: this.dateArray,
         },
         yAxis: {
           type: 'value',
         },
         series: [
           {
-            data: [this.totalConfirmed, this.totalDeaths, this.totalRecovered],
+            name: 'ჯამური შემთხვევები',
             type: 'line',
+
+            data: this.totalConfirmedArray,
+            smooth: true,
+            color: 'orange',
+          },
+          {
+            name: 'ჯამური გარდაცვალებები',
+            type: 'line',
+
+            data: this.totalDeathsArray,
+            smooth: true,
+            color: 'red',
+          },
+          {
+            name: 'ჯამური გამოჯანმრთელებები',
+            type: 'line',
+
+            data: this.totalRecoveredArray,
+            smooth: true,
+            color: 'blue',
           },
         ],
       };
     });
+    this.totalConfirmedArray = [];
+    this.dateArray = [];
+    this.totalDeathsArray = [];
+    this.totalRecoveredArray = [];
   }
 }

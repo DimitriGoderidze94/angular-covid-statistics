@@ -27,56 +27,27 @@ export class SecondPageComponent implements OnInit {
   totalDeathByDate = 0;
   check = 0;
   newData: any;
-  show = 'სამი თვე';
+  show = 'ბოლო სამი თვის ჩვენება';
   lineChartTitle = 'სრული პერიოდის ჯამური მონაცემები';
+  lineChartTitle2 = 'სრული პერიოდის ყოველდღიური მონაცემები';
   x: any;
+
+  totalConfirmedArray: any = [];
+  totalDeathsArray: any = [];
+  totalRecoveredArray: any = [];
+  dateArray: any = [];
+  chosenPeriod: any;
+  todayConfirmedArray: any = [];
+  todayDeathsArray: any = [];
+  todayRecoveredArray: any = [];
 
   constructor(private api: HttpService) {}
 
   chosenDate = new Date().toISOString().slice(0, 10);
-  chartOption: EChartsOption = {
-    xAxis: {
-      type: 'category',
-      data: [
-        'შემთხვევები \r\n \r\n' + this.totalConfirmed1,
-        'გარდაცვალებები \r\n \r\n' + this.totalDeath1,
-        'გამოჯანმრთელებები \r\n \r\n' + this.totalRecovered0,
-      ],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        data: [this.totalConfirmed1, this.totalDeath1, this.totalRecovered0],
-        type: 'line',
-      },
-    ],
-  };
-
-  chartOption1: EChartsOption = {
-    xAxis: {
-      type: 'category',
-      data: [
-        'დღის შემთხვევები' + this.confirmedForDate,
-        'დღის გარდაცვალებები' + this.newDeath,
-        'დღის გამოჯანმრთელებები' + this.recoveredForDate,
-      ],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        data: [this.confirmedForDate, this.newDeath, this.recoveredForDate],
-        type: 'bar',
-      },
-    ],
-  };
+  chartOption: EChartsOption = {};
+  chartOption1: EChartsOption = {};
 
   ngOnInit() {
-    (<HTMLInputElement>document.getElementsByClassName('datePicker')[0]).max =
-      new Date().toISOString().split('T')[0];
     this.api.getCountryData('').subscribe((data) => {
       var myData = JSON.parse(JSON.stringify(data));
       for (var i = 0; i < myData.data.length; i++) {
@@ -95,9 +66,6 @@ export class SecondPageComponent implements OnInit {
   }
 
   onChange() {
-    this.chosenDate = (<HTMLInputElement>(
-      document.getElementsByClassName('datePicker')[0]
-    )).value;
     this.index = (<HTMLSelectElement>(
       document.getElementById('chooseCountry')
     )).selectedIndex;
@@ -121,8 +89,39 @@ export class SecondPageComponent implements OnInit {
         this.newData.data?.['latest_data']['calculated'][
           'cases_per_million_population'
         ];
-      for (var i = 0; i < this.newData.data['timeline'].length; i++) {
-        if (this.newData.data['timeline'][i]['date'] == this.chosenDate) {
+      if (this.check == 0) {
+        this.show = 'ბოლო სამი თვის ჩვენება';
+        this.lineChartTitle = 'სრული პერიოდის ჯამური მონაცემები';
+        this.lineChartTitle2 = 'სრული პერიოდის ყოველდღიური მონაცემები';
+        this.chosenPeriod = this.newData.data?.['timeline'].length;
+      } else if (this.check == 1) {
+        this.lineChartTitle = 'ბოლო სამი თვის ჯამური მონაცემები';
+        this.show = 'სრული პერიოდის ჩვენება';
+        this.lineChartTitle2 = 'ბოლო სამი თვის ყოველდღიური მონაცემები';
+        this.chosenPeriod = 90;
+      }
+
+      for (var i = 0; i < this.chosenPeriod; i++) {
+        this.dateArray.unshift(this.newData.data['timeline']?.[i].date);
+        this.totalConfirmedArray.unshift(
+          this.newData.data['timeline'][i]?.['confirmed']
+        );
+        this.totalDeathsArray.unshift(
+          this.newData.data['timeline'][i]?.['deaths']
+        );
+        this.totalRecoveredArray.unshift(
+          this.newData.data['timeline'][i]?.['recovered']
+        );
+        this.todayConfirmedArray.unshift(
+          this.newData.data['timeline'][i]?.['new_confirmed']
+        );
+        this.todayDeathsArray.unshift(
+          this.newData.data['timeline'][i]?.['new_deaths']
+        );
+        this.todayRecoveredArray.unshift(
+          this.newData.data['timeline'][i]?.['new_recovered']
+        );
+        if (this.newData.data['timeline'][i]?.['date'] == this.chosenDate) {
           var countryByDate = this.newData.data['timeline'][i];
         }
       }
@@ -137,101 +136,175 @@ export class SecondPageComponent implements OnInit {
       this.totalRecoveredByDate = countryByDate?.['recovered'];
 
       this.chartOption = {
+        title: {
+          text: (<HTMLSelectElement>document.getElementById('chooseCountry'))
+            .value,
+          textStyle: {
+            color: 'darkBlue',
+            textBorderType: 'solid',
+            textBorderColor: 'indigo',
+            textBorderWidth: 2,
+          },
+        },
+        tooltip: {
+          trigger: 'axis',
+        },
+        legend: {
+          data: [
+            'ჯამური შემთხვევები',
+            'ჯამური გარდაცვალებები',
+            'ჯამური გამოჯანმრთელებები',
+          ],
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        toolbox: {
+          feature: {
+            dataView: {
+              show: true,
+              readOnly: true,
+              title: 'მონაცემების ნახვა',
+              lang: [this.lineChartTitle, 'გამორთვა'],
+            },
+            saveAsImage: { title: 'სურათის გადმოწერა' },
+          },
+        },
         xAxis: {
           type: 'category',
-          data: [
-            'შემთხვევები \r\n \r\n' + this.totalConfirmedByDate,
-            'გარდაცვალებები \r\n \r\n' + this.totalDeathByDate,
-            'გამოჯანმრთელებები \r\n \r\n' + this.totalRecoveredByDate,
-          ],
+          boundaryGap: false,
+          data: this.dateArray,
         },
         yAxis: {
           type: 'value',
         },
         series: [
           {
-            data: [
-              this.totalConfirmedByDate,
-              this.totalDeathByDate,
-              this.totalRecoveredByDate,
-            ],
+            name: 'ჯამური შემთხვევები',
             type: 'line',
+            smooth: true,
+            data: this.totalConfirmedArray,
+            color: 'orange',
+          },
+          {
+            name: 'ჯამური გარდაცვალებები',
+            type: 'line',
+            smooth: true,
+            data: this.totalDeathsArray,
+            color: 'red',
+          },
+
+          {
+            name: 'ჯამური გამოჯანმრთელებები',
+            type: 'line',
+            smooth: true,
+            data: this.totalRecoveredArray,
+            color: 'blue',
           },
         ],
       };
+
       this.chartOption1 = {
-        xAxis: {
-          type: 'category',
+        title: {
+          text: (<HTMLSelectElement>document.getElementById('chooseCountry'))
+            .value,
+          textStyle: {
+            color: 'darkBlue',
+            textBorderType: 'solid',
+            textBorderColor: 'indigo',
+            textBorderWidth: 2,
+          },
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow',
+            label: {
+              show: true,
+            },
+          },
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            dataView: {
+              show: true,
+              readOnly: true,
+              title: 'მონაცემების ნახვა',
+              lang: [this.lineChartTitle2, 'გამორთვა'],
+            },
+
+            saveAsImage: { show: true, title: 'სურათის გადმოწერა' },
+          },
+        },
+        calculable: true,
+        legend: {
           data: [
-            'დღის შემთხვევები \r\n \r\n' + this.confirmedForDate,
-            'დღის გარდაცვალებები \r\n \r\n' + this.newDeath,
-            'დღის გამოჯანმრთელებები \r\n \r\n' + this.recoveredForDate,
+            'მიმდინარე დღის შემთხვევები',
+            'მიმდინარე დღის გარდაცვალებები',
+            'მიმდინარე დღის გამოჯანმრთელებები',
           ],
+          itemGap: 5,
         },
-        yAxis: {
-          type: 'value',
+        grid: {
+          top: '12%',
+          left: '1%',
+          right: '10%',
+          containLabel: true,
         },
+        xAxis: [
+          {
+            type: 'category',
+            data: this.dateArray,
+          },
+        ],
+        yAxis: [
+          {
+            type: 'value',
+          },
+        ],
+
         series: [
           {
-            data: [this.confirmedForDate, this.newDeath, this.recoveredForDate],
+            name: 'მიმდინარე დღის შემთხვევები',
             type: 'bar',
+            data: this.todayConfirmedArray,
+            color: 'orange',
+          },
+          {
+            name: 'მიმდინარე დღის გარდაცვალებები',
+            type: 'bar',
+            data: this.todayDeathsArray,
+            color: 'red',
+          },
+          {
+            name: 'მიმდინარე დღის გამოჯანმრთელებები',
+            type: 'bar',
+            data: this.todayRecoveredArray,
+            color: 'blue',
           },
         ],
       };
     });
-    this.show = 'სამი თვის ჩვენება';
-    this.lineChartTitle = 'სრული პერიოდის ჯამური მონაცემები მოცემულ თარიღამდე';
-    this.check = 0;
+
+    this.todayConfirmedArray = [];
+    this.todayDeathsArray = [];
+    this.todayRecoveredArray = [];
+    this.totalConfirmedArray = [];
+    this.totalDeathsArray = [];
+    this.totalRecoveredArray = [];
+    this.dateArray = [];
   }
 
-  changeDate() {
-    this.onChange();
-  }
   toggleThreeMonth() {
     if (this.check == 0) {
       this.check = 1;
-      this.totalConfirmedByDate = 0;
-      this.totalDeathByDate = 0;
-      this.totalRecoveredByDate = 0;
-
-      for (var i = 0; i < 90; i++) {
-        this.totalConfirmedByDate +=
-          this.newData.data['timeline'][i]['new_confirmed'];
-        this.totalDeathByDate += this.newData.data['timeline'][i]['new_deaths'];
-        this.totalRecoveredByDate +=
-          this.newData.data['timeline'][i]['new_recovered'];
-      }
-      this.chartOption = {
-        xAxis: {
-          type: 'category',
-          data: [
-            'შემთხვევები \r\n \r\n' + this.totalConfirmedByDate,
-            'გარდაცვალებები \r\n \r\n' + this.totalDeathByDate,
-            'გამოჯანმრთელებები \r\n \r\n' + this.totalRecoveredByDate,
-          ],
-        },
-        yAxis: {
-          type: 'value',
-        },
-        series: [
-          {
-            data: [
-              this.totalConfirmedByDate,
-              this.totalDeathByDate,
-              this.totalRecoveredByDate,
-            ],
-            type: 'line',
-          },
-        ],
-      };
-      this.show = 'სრული პერიოდი';
-      this.lineChartTitle = 'ბოლო სამი თვის მონაცემები';
     } else if (this.check == 1) {
       this.check = 0;
-      this.onChange();
-      this.show = 'სამი თვის ჩვენება';
-      this.lineChartTitle =
-        'სრული პერიოდის ჯამური მონაცემები მოცემულ თარიღამდე';
     }
+    this.onChange();
   }
 }
