@@ -144,7 +144,6 @@ export class SecondPageComponent implements OnInit {
             textBorderType: 'solid',
             textBorderColor: 'indigo',
             textBorderWidth: 2,
-            fontSize: 10,
           },
         },
         tooltip: {
@@ -156,6 +155,8 @@ export class SecondPageComponent implements OnInit {
             'ჯამური გარდაცვალებები',
             'ჯამური გამოჯანმრთელებები',
           ],
+          orient: 'vertical',
+          padding: 30,
         },
         grid: {
           left: '3%',
@@ -178,9 +179,17 @@ export class SecondPageComponent implements OnInit {
           type: 'category',
           boundaryGap: false,
           data: this.dateArray,
+          axisLabel: {
+            color: 'indigo',
+            fontSize: 9,
+          },
         },
         yAxis: {
           type: 'value',
+          axisLabel: {
+            color: 'indigo',
+            fontSize: 9,
+          },
         },
         series: [
           {
@@ -248,7 +257,9 @@ export class SecondPageComponent implements OnInit {
             'მიმდინარე დღის გარდაცვალებები',
             'მიმდინარე დღის გამოჯანმრთელებები',
           ],
-          itemGap: 5,
+          itemGap: 1,
+          orient: 'vertical',
+          padding: 30,
         },
         grid: {
           top: '12%',
@@ -260,11 +271,19 @@ export class SecondPageComponent implements OnInit {
           {
             type: 'category',
             data: this.dateArray,
+            axisLabel: {
+              color: 'indigo',
+              fontSize: 9,
+            },
           },
         ],
         yAxis: [
           {
             type: 'value',
+            axisLabel: {
+              color: 'indigo',
+              fontSize: 9,
+            },
           },
         ],
 

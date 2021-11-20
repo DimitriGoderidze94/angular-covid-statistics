@@ -65,7 +65,6 @@ export class FirstPageComponent implements OnInit {
             textBorderType: 'solid',
             textBorderColor: 'indigo',
             textBorderWidth: 2,
-            fontSize: 15,
           },
         },
         tooltip: {
@@ -77,6 +76,8 @@ export class FirstPageComponent implements OnInit {
             'ჯამური გარდაცვალებები',
             'ჯამური გამოჯანმრთელებები',
           ],
+          orient: 'vertical',
+          padding: 30,
         },
 
         grid: {
@@ -103,15 +104,21 @@ export class FirstPageComponent implements OnInit {
           type: 'category',
           boundaryGap: false,
           data: this.dateArray,
+          axisLabel: {
+            color: 'indigo',
+          },
         },
         yAxis: {
           type: 'value',
+          axisLabel: {
+            color: 'indigo',
+            fontSize: 9,
+          },
         },
         series: [
           {
             name: 'ჯამური შემთხვევები',
             type: 'line',
-
             data: this.totalConfirmedArray,
             smooth: true,
             color: 'orange',
