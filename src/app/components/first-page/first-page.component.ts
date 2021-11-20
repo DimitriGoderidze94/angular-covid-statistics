@@ -65,6 +65,7 @@ export class FirstPageComponent implements OnInit {
             textBorderType: 'solid',
             textBorderColor: 'indigo',
             textBorderWidth: 2,
+            fontSize: 15,
           },
         },
         tooltip: {

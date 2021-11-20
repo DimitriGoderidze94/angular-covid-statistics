@@ -144,6 +144,7 @@ export class SecondPageComponent implements OnInit {
             textBorderType: 'solid',
             textBorderColor: 'indigo',
             textBorderWidth: 2,
+            fontSize: 10,
           },
         },
         tooltip: {
