@@ -10,11 +10,11 @@ label {
   display: block;
   color: rgb(67, 48, 46);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 13;
 }
 
 @media only screen and (max-width: 500px) {
   label {
-    font-size: 10px;
+    font-size: 10;
   }
 }
